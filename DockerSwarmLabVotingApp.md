@@ -34,16 +34,10 @@ scale a service:
 	$docker service update --replicas 2 voting_stack_vote
 
 	$docker service update --replicas 2 voting_stack_redis
-  
-## On Worker Node:
-
-	$yum install docker
-
-	$service docker  start
-
-	$docker swarm join --token SWMTKN-1-3gs4q4rqygek2dalg3adauucjgqem3d6058yzwwt7rq6kugl01-1s0r6qevn4idfy87nmy11lhvj 192.168.0.28:2377
-
-
+ 
+	http://<master ip>:5000/
+	
+	docker stack rm voting_stack
 
 ##########################
 To create swarm using Hyper V container

@@ -1,0 +1,77 @@
+https://hewlettpackard.github.io/Docker-Synergy/promgraf/promgraf-overview.html
+https://prometheus.io/docs/guides/dockerswarm/
+https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/
+
+https://www.youtube.com/watch?v=74p7csxKN8M
+
+docker swarm init
+docker node ls
+
+docker swarm leave --force
+docker node rm <node id from node ls>
+
+docker swarm join --token <token>
+docker node ls
+
+docker service create --replicas <count> --publish <port-mapping> <image>
+docker service create --name myservice --replicas 3 -p 80:80 nginx:latest
+docker ps
+docker service ls
+docker service inspect --pretty <name>
+docker service ps #which nodes are running a service
+docker service logs
+
+sudo docker rm -f <container id>
+watch while the above command is executed
+
+
+Deployments in swarm
+	deploy multiple services at the same time.
+	docker stack
+	uses yaml
+	
+docker stack deploy -c <yaml> <stack-name>
+docker service ls
+docker service scale <serviceid>=3
+
+
+rolling updates
+docker service create --replicas 3 -name redis --update-delay 10s redis:3.0.6
+docker service update --image redis:3.0.7 redis
+
+drain nodes
+-----------
+docker node ls
+docker node update --availability drain <id>
+docker node ls
+docker ps
+	container shifted to other node
+docker node update --availability active <id>
+
+connect to a network
+--------------------
+docker network create --network overlay my-network (my-network is the name i chose)
+docker service create --replicas 3 --network my-network --name test nginx:latest
+ 
+docker service inspect --pretty <name>
+
+add network to an existing service
+----------------------------------
+docker service create --replicas 3 --name demo-add nginx:latest
+docker service inspect --pretty demo-add
+	no ntw mentioned
+docker service update --network-add <ntw name> <nameof service>
+
+remove network
+--------------
+docker service update --network-rm my-net demo-add
+	<my-net:network name> <demo-add: service-name>
+	
+Giving storage access
+---------------------
+docker service ls
+	volume
+docker service create --mount src=<vol>, dst=<container-path> --name myservice <image>
+	bindmount
+docker service create --mount type=bind,src=<host-path>,dst=<cotainer-path> --name <myservice> <image>
+

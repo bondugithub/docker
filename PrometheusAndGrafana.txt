@@ -1,0 +1,45 @@
+Docker Prometheus Grafana
+
+
+Prometheus is an open source monitoring solution that is super easy to setup.
+
+Grafana makes displaying your metrics.
+
+prometheus download link - https://prometheus.io/download
+
+
+grafana download link - https://grafana.com/grafana/download
+
+
+monitoring jenkins using prometheus and grafana - https://youtu.be/EWFJem7GUAc
+
+monitoring kubernenetes cluster using prometheus and grafana - https://youtu.be/w8FZDvQdZdw
+
+Prometheus
+	Time Sries database
+	designed to monitor targets
+	Servers, db, standalone VM's ect.. can be monitored from Prometheus
+	Prometheus sends the feeds to Grafana
+	
+Grafana
+	Multi-platform open source analytics and interactive visualization tool.
+	Provides
+		charts
+		graphs
+		alerts
+	Connect to data sources 
+		Prometheus can be a data source
+	Expandable through plugin system.
+	End users can create 
+		complex monitoring dashboard 
+			interactive query builder
+
+https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/
+Note the correction
+	LOGSTASH_URL=http://logstash:8080/ was corrected as 
+	LOGSTASH_URL=http://logstash:8085/
+	
+	Grafana credentials
+		admin/admin
+		Add prometheus data source
+		

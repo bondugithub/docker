@@ -1,0 +1,131 @@
+https://hewlettpackard.github.io/Docker-Synergy/promgraf/promgraf-overview.html
+https://prometheus.io/docs/guides/dockerswarm/
+https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/
+
+
+docker swarm init --advertise-addr $(hostname -i)
+-----------------------------------------
+	To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-6dmjh2g1e80v0aws9e13s7utc6t0e5l6pllg9g78scirta7nc2-7k8rcwe6e3lwmshyg05w9cdt2 172.31.46.247:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+------------------------------------------
+docker node ls
+
+Execute the below on the worker node.
+	docker swarm leave --force
+
+docker node rm <node id from node ls>
+
+docker swarm join --token <token>
+docker node ls
+
+docker service create --replicas <count> --publish <port-mapping> <image>
+docker service create --name myservice --replicas 2 -p 80:80 nginx:latest
+docker ps
+docker service ls
+docker service inspect --pretty <name>
+docker service inspect myservice
+docker service ps <service id from docker service ls>#which nodes are running a service
+
+docker service logs <service id from docker service ls> 
+	
+sudo docker rm -f <container id>
+watch while the above command is executed
+
+remove service
+--------------
+docker service ls
+docker service rm <service id>
+
+Deployments in swarm
+	deploy multiple services at the same time.
+	docker stack
+	uses yaml
+
+Create a yaml file with below content
+-----------------------------------------	
+version: "3.8"
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+  ubuntu:
+    image: ubuntu	
+-----------------------------------------	
+	
+docker stack deploy -c <yaml> <stack-name>
+docker service ls
+docker service scale <serviceid>=3
+
+
+rolling updates
+---------------
+---------------------------------------------
+docker service create --replicas 3 --name redis --update-delay 10s redis:3.0.6
+docker service update --image redis:3.0.7 redis
+
+
+docker service create --replicas 2 --name nginx nginx:1.9.1
+docker service update --image nginx:1.16.1 nginx
+---------------------------------------------
+
+
+drain nodes
+-----------
+docker node ls
+docker node update --availability drain <id>
+docker node ls
+docker ps
+	container shifted to other node
+docker node update --availability active <id>
+
+connect to a network
+--------------------
+docker network create -d overlay my-overlay
+	(my-overlay is the name i chose)
+docker service create --replicas 2 --network my-overlay --name test nginx:latest
+ 
+docker service inspect --pretty <name>
+
+add network to an existing service
+----------------------------------
+docker service create --replicas 3 --name demo-add nginx:latest
+docker service inspect --pretty demo-add
+	no ntw mentioned
+docker service update --network-add <ntw name> <nameof service>
+
+remove network
+--------------
+docker service update --network-rm my-net demo-add
+	<my-net:network name> <demo-add: service-name>
+	
+Giving storage access
+---------------------
+docker service ls
+	volume
+docker service create --mount src=<vol>, dst=<container-path> --name myservice <image>
+docker service inspect --pretty <name>
+	bindmount
+docker service create --mount type=bind,src=<host-path>,dst=<cotainer-path> --name <myservice> <image>
+
+Controlling service placements
+------------------------------
+Global: Similar to daemonset in k8s
+	One instance runs on every node
+	
+	docker service create --name myservice2 --mode global nginx
+	
+	
+--reserve-memory or --reserve-cpu flgas
+docker service create --name mynginx --replicas 5 --constraint node.lablels.region=east nginx:latest
+
+docker node update --label-add ID=1.1 <id> of node>
+--placement-pref
+	equally distribute
+docker service create --replica 9 --name mynginx --placement-pref 'spread=node.labels.datacenter' nginx:latest
+
+
