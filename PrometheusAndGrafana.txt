@@ -35,6 +35,7 @@ Grafana
 			interactive query builder
 
 https://dockerlabs.collabnix.com/play-with-docker/docker-prometheus-swarm/
+
 Note the correction
 	LOGSTASH_URL=http://logstash:8080/ was corrected as 
 	LOGSTASH_URL=http://logstash:8085/

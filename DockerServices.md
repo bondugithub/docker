@@ -71,7 +71,11 @@ When you create a service
 		create a service, 
 			it is pending until a node becomes available. 
 		N.B: Don't do this on production because once a node becomes available, first node to become available gets all of the tasks.
-You can reserve a specific amount of memory for a service. If no node in the swarm has the required amount of memory, the service remains in a pending state until a node is available which can run its tasks. If you specify a very large value, such as 500 GB, the task stays pending forever, unless you really have a node which can satisfy it.
+
+		You can reserve a specific amount of memory for a service. 
+		If no node in the swarm has the required amount of memory, 
+			the service remains in a pending state until a node is available which can run its tasks. 
+			If you specify a very large value, such as 500 GB, the task stays pending forever, unless you really have a node which can satisfy it.
 
 You can impose placement constraints on the service, and the constraints may not be able to be honored at a given time.
 
